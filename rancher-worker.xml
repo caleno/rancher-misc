@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Rancher Controlplane</short>
+  <description>Ports required for a Rancher Controlplane node per .</description>
+  <port port="80" protocol="tcp"/>
+  <port port="443" protocol="tcp"/>
+  <port port="2376" protocol="tcp"/>
+  <port port="8472" protocol="udp"/>
+  <port port="10250" protocol="tcp"/>
+  <port port="30000-32767" protocol="tcp"/>
+  <port port="30000-32767" protocol="udp"/>
+</service>
