@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Rancher Controlplane</short>
+  <description>Ports required for a Rancher Controlplane node per https://rancher.com/docs/rancher/v2.x/en/installation/requirements/.</description>
+  <port port="6443" protocol="tcp"/>
+  <port port="80" protocol="tcp"/>
+  <port port="443" protocol="tcp"/>
+  <port port="2376" protocol="tcp"/>
+  <port port="8472" protocol="udp"/>
+  <port port="2379" protocol="tcp"/>
+  <port port="2380" protocol="tcp"/>
+  <port port="10250" protocol="tcp"/>
+  <port port="30000-32767" protocol="tcp"/>
+  <port port="30000-32767" protocol="udp"/>
+</service>
