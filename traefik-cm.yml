@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik
+  namespace: kube-system
+data:
+  traefik.toml: |-
+    checkNewVersion = false
+    IdleTimeout = "180s"
+    MaxIdleConnsPerHost = 500
+    logLevel = "DEBUG"
+    debug = true
+    defaultEntryPoints = ["http", "https"]
+
+    [etcd]
+      endpoint = "xxx.xxx.xxx.xxx:2379,xxx.xxx.xxx.xxx:2379"
+      watch = true
+      prefix = "/traefik
+
+    [entryPoints]
+      [entryPoints.http]
+        address = ":80"
+        compress = true
+      [entryPoints.http.redirect]
+        entryPoint = "https"
+      [entryPoints.https]
+        address = ":443"
+      [entryPoints.https.tls]
+        MinVersion = "VersionTLS12"
+        CipherSuites = ["TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA", "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA", "TLS_RSA_WITH_AES_128_GCM_SHA256", "TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_RSA_WITH_AES_128_CBC_SHA", "TLS_RSA_WITH_AES_256_CBC_SHA"]
+      [[entryPoints.https.tls.certificates]]
+        CertFile = "/ssl/tls.crt"
+        KeyFile = "/ssl/tls.key"
+
+    [acme]
+    email = "me@example.com"
+    storage = "traefik/acme/account"
+    storageFile = "/acme/acme.json"
+    entryPoint = "https"
+    OnHostRule = true
+    onDemand = true
+    acmeLogging = true
+    # Comment out to go to Prod
+    caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+    entryPoint = "https"
+      [acme.httpChallenge]
+      entryPoint = "http"
+      # DNS-01 challenge
+      #[acme.dnsChallenge]
+      #provider = "manual" # need to run Træfik interactively, turn on acmeLogging to see instructions and press Enter.
+      #delayBeforeCheck = 0
+
+    [web]
+      address = ":8080"
+      readOnly = true
+    # enable basic authentication
+      [web.auth.basic]
+        users = ["tadmin:$apr1$k2qslCn6$0OgA8vhnyC8nJ99YfJMOM/"]
+
+    [[acme.domains]]
+      main = "domain.com"
+      sans = ["sub.domain.com"]
+
+    [retry]
+      attempts = 3
+
+    [kubernetes]
+      # only monitor Ingresses with this label
+      labelselector = "public-lb=traefik"
+...
